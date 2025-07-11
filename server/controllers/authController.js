@@ -12,11 +12,17 @@ exports.register = async (req, res) => {
 
     const { firstName, lastName, email, password, phoneNumber, role, socialMediaProfiles } = req.body;
 
+    const allowedAdminEmails = process.env.ALLOWED_ADMIN_EMAILS
+      ? process.env.ALLOWED_ADMIN_EMAILS.split(',').map(email => email.trim().toLowerCase())
+      : []
+
     // Check if user exists
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
     }
+
+    const finalRole = allowedAdminEmails.includes(email.toLowerCase()) ? 'admin' : (role || 'user')
 
     // Create new user
     user = new User({
@@ -25,7 +31,7 @@ exports.register = async (req, res) => {
       email,
       password,
       phoneNumber,
-      role: role || 'user', // Default to 'user' if not provided
+      role: finalRole, 
       socialMediaProfiles
     });
 
