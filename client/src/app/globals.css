@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
-
-
-*{
-  margin: 0;
-  padding: 0;
+/* Safer reset */
+* {
   box-sizing: border-box;
+}
+
+/* Optionally, add this to avoid collapsing margins */
+body, h1, h2, h3, h4, p {
+  margin: 0;
 }
