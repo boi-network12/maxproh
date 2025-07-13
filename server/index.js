@@ -24,6 +24,11 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan('dev'));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy' });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);

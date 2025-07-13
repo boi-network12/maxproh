@@ -1,3 +1,4 @@
+import DashboardCard from '@/components/DashboardCard/DashboardCard'
 import Navbar from '@/components/Navbar/Navbar'
 import { AuthUser } from '@/types/auth'
 import React from 'react'
@@ -11,6 +12,9 @@ const HomeUI: React.FC<HomeUIProps> = ({ user }) => {
     <div className='w-full '>
       <Navbar user={user} />
       
+      <section className='w-full flex items-center justify-center pt-3'>
+        <DashboardCard user={user}/>
+      </section>
     </div>
   )
 }
