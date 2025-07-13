@@ -15,6 +15,9 @@ const HomeUI: React.FC<HomeUIProps> = ({ user }) => {
       <section className='w-full flex items-center justify-center pt-3'>
         <DashboardCard user={user}/>
       </section>
+      <section className='w-full flex items-center justify-center pt-3'>
+        
+      </section>
     </div>
   )
 }
