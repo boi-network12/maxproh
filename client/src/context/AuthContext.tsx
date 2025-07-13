@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useEffect, useState } from "react"
 import { AuthResponse, AuthUser, LoginCredentials, RegisterCredentials } from "../types/auth"
-import { login as loginApi, register as registerApi } from "../utils/api"
+import { getMe, login as loginApi, register as registerApi } from "../utils/api"
 import { toast } from "react-toastify"
 
 interface AuthContextType {
@@ -28,9 +28,35 @@ export const AuthProvider = ({ children }: { children: ReactNode}) => {
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
+
+      fetchUserProfile(storedToken)
     }
     setIsLoading(false);
   }, []);
+
+  const fetchUserProfile = async (token: string) => {
+    try {
+      const profile = await getMe(token);
+      setUser({
+        id: profile.id,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        email: profile.email,
+        phoneNumber: profile.phoneNumber,
+        accountBalance: profile.accountBalance,
+        role: profile.role,
+        isActive: profile.isActive,
+        socialMediaProfiles: profile.socialMediaProfiles,
+      });
+      localStorage.setItem("user", JSON.stringify(profile));
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    }
+  };
 
   const login = async (credentials: LoginCredentials) => {
     try {
@@ -40,9 +66,11 @@ export const AuthProvider = ({ children }: { children: ReactNode}) => {
       setToken(response.token);
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
+      await fetchUserProfile(response.token)
       toast.success("Login successful!")
     } catch (error) {
-      toast.error("Login failed. Please check your credentials.");
+      const message = error instanceof Error ? error.message : "Login Failed. please check your credentials"
+      toast.error(message);
       throw error;
     } finally {
         setIsLoading(false)
@@ -57,9 +85,12 @@ export const AuthProvider = ({ children }: { children: ReactNode}) => {
       setToken(response.token);
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
+      await fetchUserProfile(response.token)
       toast.success("Registration successful!");
     } catch (error) {
-      toast.error("Registration failed. Please try again.");
+      const message =
+      error instanceof Error ? error.message : "Registration failed. Please try again.";
+      toast.error(message);
       throw error;
     } finally {
       setIsLoading(false);

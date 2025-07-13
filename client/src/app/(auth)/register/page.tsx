@@ -3,14 +3,37 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils';
+import { RegisterCredentials } from '@/types/auth';
 import Link from 'next/link';
-import React from 'react'
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react'
+import { ClipLoader } from 'react-spinners';
 
 const Register = () => {
-    const {  } = useAuth();
+    const { register, isLoading } = useAuth();
+    const router = useRouter();
+    const [formData, setFormData] = useState<RegisterCredentials>({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    });
 
-    const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLElement>) => {
         e.preventDefault();
+        try {
+          await register(formData)
+          router.replace('/')
+        } catch (error) {
+          console.error('Registration error: ', error)
+        }
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value,
+      })
     }
 
   return (
@@ -22,19 +45,25 @@ const Register = () => {
             <form className='!my-8' onSubmit={handleSubmit}>
               <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 md:gap-3">
                 <LabelInputContainer>
-                  <Label htmlFor="firstname">First name</Label>
+                  <Label htmlFor="firstName">First name</Label>
                   <Input 
-                      id="firstname" 
-                      placeholder="Tyler" 
+                      id="firstName" 
+                      placeholder="First Name" 
                       type="text" 
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      required
                    />
                 </LabelInputContainer>
                 <LabelInputContainer>
-                  <Label htmlFor="lastname">Last name</Label>
+                  <Label htmlFor="lastName">Last name</Label>
                   <Input 
-                      id="lastname" 
-                      placeholder="Durden" 
+                      id="lastName" 
+                      placeholder="Last Name" 
                       type="text" 
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
                   />
                 </LabelInputContainer>
               </div>
@@ -44,6 +73,9 @@ const Register = () => {
                    id="email" 
                    placeholder="example@fc.com" 
                    type="email" 
+                   value={formData.email}
+                    onChange={handleChange}
+                    required
                 />
               </LabelInputContainer>
               <LabelInputContainer className="mb-4">
@@ -51,7 +83,10 @@ const Register = () => {
                 <Input 
                    id="password" 
                    placeholder="••••••••" 
-                   type="password" 
+                   type="password"
+                   value={formData.password}
+                  onChange={handleChange}
+                  required
                 />
               </LabelInputContainer>
 
@@ -59,7 +94,15 @@ const Register = () => {
                 className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]  ,0px_-1px_0px_0px_#27272a_inset]"
                 type="submit"
               >
-                Sign up &rarr;
+                {isLoading ? <p className='flex items-center justify-center space-x-2'>
+                  <ClipLoader
+                     color='#fff'
+                     loading={isLoading}
+                     size={20}
+                     aria-label='Loading spinner'
+                     data-testid="loader"
+                  /> <span>Loading...</span>
+                </p> : <p>Sign up &rarr;</p>}
                 <BottomGradient />
               </button>
             </form>

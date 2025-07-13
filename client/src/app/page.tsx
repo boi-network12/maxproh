@@ -6,14 +6,14 @@ import { useEffect } from "react";
 
 
 export default function Home() {
-  const { user, isLoading } = useAuth()
+  const { user, isLoading, token } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (isLoading && !user) {
+    if (!isLoading && !user && !token) {
       router.replace("/login")
     }
-  },[user, isLoading, router])
+  },[user, isLoading, router, token])
 
   if (isLoading) {
     return (
@@ -23,9 +23,13 @@ export default function Home() {
     )
   }
 
+  if (!user){
+    return null;
+  }
+
   return (
     <div>
-      
+      <p>{user?.firstName}</p>
     </div>
   );
 }

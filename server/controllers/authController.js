@@ -45,17 +45,12 @@ exports.register = async (req, res) => {
       token,
       user: {
         id: user._id,
-        firstName,
-        lastName,
         email,
-        phoneNumber,
-        accountBalance: user.accountBalance,
-        role: user.role,
-        socialMediaProfiles: user.socialMediaProfiles,
         isActive: user.isActive
       }
     });
   } catch (error) {
+    console.error(error)
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -87,9 +82,11 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Update lastLogin
-    user.lastLogin = new Date();
-    await user.save();
+    // Update lastLogin without triggering full validation
+    await User.updateOne(
+      { _id: user._id },
+      { $set: { lastLogin: new Date() } }
+    );
 
     // Generate JWT
     const payload = { userId: user._id, role: user.role };
@@ -99,17 +96,12 @@ exports.login = async (req, res) => {
       token,
       user: {
         id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
         email: user.email,
-        phoneNumber: user.phoneNumber,
-        accountBalance: user.accountBalance,
-        role: user.role,
-        socialMediaProfiles: user.socialMediaProfiles,
         isActive: user.isActive
       }
     });
   } catch (error) {
+    console.error(error)
     res.status(500).json({ message: 'Server error' });
   }
 };

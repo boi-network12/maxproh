@@ -2,7 +2,7 @@
 
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { User, UpdateUserProfile, UpdateUserRole } from '../types/user';
-import { getUserProfile, updateUserProfile, updateUserRole } from '../utils/api';
+import { getMe, updateUserProfile, updateUserRole } from '../utils/api';
 import { useAuth } from '@/hooks/useAuth';
 
 interface UserContextType {
@@ -26,7 +26,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (token && user) {
         try {
           setIsLoading(true);
-          const profile = await getUserProfile(token);
+          const profile = await getMe(token);
           setUserProfile(profile);
         } catch (error) {
           console.error('Failed to fetch user profile:', error);
@@ -50,7 +50,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
     try {
       setIsLoading(true);
-      const profile = await getUserProfile(token);
+      const profile = await getMe(token);
       setUserProfile(profile);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
