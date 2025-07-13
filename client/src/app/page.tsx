@@ -1,4 +1,6 @@
+// app/page
 "use client"
+import HomeUI from "@/components/layouts/Home/HomeUI";
 import SpinnerLoading from "@/components/Loading/SpinnerLoading";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -18,7 +20,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center">
-        <SpinnerLoading/>
+        <SpinnerLoading />
       </div>
     )
   }
@@ -28,8 +30,8 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <p>{user?.firstName}</p>
-    </div>
+    <HomeUI 
+       user={user}
+    />
   );
 }
