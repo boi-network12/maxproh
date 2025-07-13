@@ -43,16 +43,6 @@ export const register = async (credentials: RegisterCredentials): Promise<AuthRe
   }
 };
 
-export const getUserProfile = async (token: string): Promise<User> => {
-  try {
-    const response = await api.get<User>('/users/profile', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(extractErrorMessage(error));
-  }
-};
 
 export const getMe = async (token: string): Promise<User> => {
   try {
