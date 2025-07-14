@@ -87,3 +87,52 @@ export const getAllUsers = async (token: string, searchQuery: string = ""): Prom
     throw new Error(extractErrorMessage(error));
   }
 };
+
+export const createPricingAPI = async (data: { socialMediaPlatform: string; unitPrice: number; quantity: number}, token: string) => {
+   try {
+    const response = await api.post('/pricing', data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error));
+  }
+}
+
+export const getAllPricing = async (token: string) => {
+  try {
+    const response = await api.get('/pricing', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error));
+  }
+};
+
+export const updatePricingAPI = async (
+  id: string,
+  data: { socialMediaPlatform?: string; unitPrice?: number; quantity?: number },
+  token: string
+) => {
+  try {
+    const response = await api.put(`/pricing/${id}`, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.pricing;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error));
+  }
+};
+
+export const deletePricingAPI = async (id: string, token: string) => {
+  try {
+    const response = await api.delete(`/pricing/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error));
+  }
+};

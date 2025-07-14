@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const pricingRoutes = require('./routes/pricing');
 const morgan = require('morgan');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const connectDB = require('./config/db');
@@ -32,6 +33,7 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api', pricingRoutes);
 
 app.use(errorHandler)
 

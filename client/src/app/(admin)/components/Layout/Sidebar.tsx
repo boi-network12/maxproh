@@ -4,7 +4,7 @@ import Link from "next/link";
 const links = [
   { name: "Home", icon: <Home className="h-5 w-5" />, href: "/admin" },
   { name: "Users", icon: <Users className="h-5 w-5" />, href: "/admin/users" },
-  { name: "Settings", icon: <Settings className="h-5 w-5" />, href: "/admin/settings" },
+  { name: "Settings", icon: <Settings className="h-5 w-5" />, href: "/admin/setting" },
 ];
 
 export default function Sidebar() {

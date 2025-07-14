@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/userContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PricingProvider } from "@/context/PricingContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,21 +35,23 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AuthProvider>
-          <UserProvider>
-            {children}
-            <ToastContainer
-              position="top-right" 
-              autoClose={3000} 
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-          </UserProvider>
+          <PricingProvider>
+            <UserProvider>
+              {children}
+              <ToastContainer
+                position="top-right" 
+                autoClose={3000} 
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
+            </UserProvider>
+          </PricingProvider>
         </AuthProvider>
       </body>
     </html>

@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 // Load allowed admin emails from .env
 const allowedAdminEmails = process.env.ALLOWED_ADMIN_EMAILS
@@ -66,4 +66,31 @@ exports.updateRoleValidation = [
     .optional()
     .isBoolean()
     .withMessage('isActive must be a boolean')
+];
+
+exports.pricingValidation = [
+  body('socialMediaPlatform')
+    .isIn(['instagram', 'facebook', 'twitter', 'youtube', 'tiktok'])
+    .withMessage('Invalid social media platform'),
+  body('unitPrice')
+    .isFloat({ min: 0 })
+    .withMessage('Unit price must be a positive number'),
+  body('quantity')
+    .isIn([10, 100, 500, 1000, 2000, 5000])
+    .withMessage('Quantity must be one of 10, 100, 500, 1000, 2000, 5000'),
+];
+
+exports.updatePricingValidation = [
+  body('socialMediaPlatform')
+    .optional()
+    .isIn(['instagram', 'facebook', 'twitter', 'youtube', 'tiktok'])
+    .withMessage('Invalid social media platform'),
+  body('unitPrice')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Unit price must be a positive number'),
+  body('quantity')
+    .optional()
+    .isIn([10, 100, 500, 1000, 2000, 5000])
+    .withMessage('Quantity must be one of 10, 100, 500, 1000, 2000, 5000'),
 ];
