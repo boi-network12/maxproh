@@ -6,11 +6,8 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-interface UsersProps {
-  searchQuery?: string;
-}
 
-const Users = ({ searchQuery }: UsersProps) => {
+const Users: React.FC = () => {
   const { fetchAllUsers, isLoading, users } = useUser();
   const { user } = useAuth();
   const router = useRouter();
@@ -23,13 +20,6 @@ const Users = ({ searchQuery }: UsersProps) => {
 
     fetchAllUsers();
   }, [user, router, fetchAllUsers]);
-
-  // Filter users based on searchQuery
-  const filteredUsers = users.filter((user) =>
-    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery?.toLowerCase() || "") ||
-    user.email.toLowerCase().includes(searchQuery?.toLowerCase() || "") ||
-    user.role.toLowerCase().includes(searchQuery?.toLowerCase() || "")
-  );
 
 
 
@@ -59,14 +49,14 @@ const Users = ({ searchQuery }: UsersProps) => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.length === 0 ? (
+            {users.length === 0 ? (
               <tr>
                 <td colSpan={7} className="text-center p-6 text-gray-500">
                   No users found.
                 </td>
               </tr>
             ) : (
-              filteredUsers.map((user, index) => (
+              users.map((user, index) => (
                 <tr key={index} className="border-t hover:bg-gray-50 transition">
                   <td className="py-3 px-4 text-gray-600">{index + 1}</td>
                   <td className="py-3 px-4 font-medium text-gray-800">
