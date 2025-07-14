@@ -17,6 +17,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ user }) => {
         alt="Dashboard Background"
         fill
         className="absolute inset-0 object-cover z-0"
+        priority
       />
 
       {/* Overlay (optional for better contrast) */}
