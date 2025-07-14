@@ -1,6 +1,6 @@
 // src/config/apiConfig.tsx
 
-let API_URL = 'https://maxproh.onrender.com/api'; // default to production
+let API_URL = 'https://maxproh.onrender.com/api'; 
 
 if (typeof window !== 'undefined') {
   const hostname = window.location.hostname;

@@ -19,8 +19,24 @@ const PORT = process.env.PORT || 5000;
 // connect to mongoose
 connectDB();
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://maxproh.pxxl.click', 
+  'https://maxproh.vercel.app', 
+];
+
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('dev'));
