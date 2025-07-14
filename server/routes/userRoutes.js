@@ -10,4 +10,7 @@ router.put('/profile', protect, userController.updateUserProfile);
 
 router.put('/role', protect, admin, userController.updateUserRole);
 
+//  admin
+router.get('/all', protect, admin, userController.getAllUsers);
+
 module.exports = router;

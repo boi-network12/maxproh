@@ -15,6 +15,7 @@ const dropdownItems = [
   { name: "Profile", href: "/profile" },
   { name: "Refers", href: "/referrals" },
   { name: "Transaction History", href: "/transactions" },
+  { name: "Admin Dashboard", href: "/admin"}
 ];
 
 const Navbar: React.FC<NavbarProps> = ({ user }) => {
@@ -64,17 +65,19 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                   <p className="text-sm text-gray-500 truncate">{user?.email}</p>
                 </div>
                 <ul className="py-2">
-                  {dropdownItems.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
+                  {dropdownItems
+                      .filter((item) => item.name !== "Admin Dashboard" || user?.role === "admin")
+                      .map((item) => (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                            onClick={() => setDropdownOpen(false)}
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                    ))}
                 </ul>
               </div>
             )}

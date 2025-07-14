@@ -1,13 +1,15 @@
 'use client';
 
-import { createContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { User, UpdateUserProfile, UpdateUserRole } from '../types/user';
-import { getMe, updateUserProfile, updateUserRole } from '../utils/api';
+import { getAllUsers, getMe, updateUserProfile, updateUserRole } from '../utils/api';
 import { useAuth } from '@/hooks/useAuth';
 
 interface UserContextType {
   userProfile: User | null;
+  users: User[];
   fetchUserProfile: () => Promise<void>;
+  fetchAllUsers: () => Promise<void>; 
   updateProfile: (data: UpdateUserProfile) => Promise<void>;
   updateRole: (data: UpdateUserRole) => Promise<void>;
   isLoading: boolean;
@@ -18,6 +20,7 @@ export const UserContext = createContext<UserContextType | undefined>(undefined)
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userProfile, setUserProfile] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [users, setUsers] = useState<User[]>([]);
   const { token, user } = useAuth();
 
   // Fetch user profile when token changes (e.g., after login/register)
@@ -60,6 +63,23 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const fetchAllUsers = useCallback(async () => {
+    if (!token || user?.role !== "admin") {
+      setUsers([]);
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const fetchedUsers = await getAllUsers(token);
+      setUsers(fetchedUsers);
+    } catch (error) {
+      console.error('Failed to fetch all users:', error);
+      setUsers([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [token, user]);
+
   const updateProfile = async (data: UpdateUserProfile) => {
     if (!token) throw new Error('No token available');
     try {
@@ -74,12 +94,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+
   const updateRole = async (data: UpdateUserRole) => {
     if (!token) throw new Error('No token available');
     try {
       setIsLoading(true);
       const updatedUser = await updateUserRole(data, token);
       setUserProfile(updatedUser);
+      await fetchAllUsers();
     } catch (error) {
       console.error('Failed to update role:', error);
       throw error;
@@ -89,7 +111,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <UserContext.Provider value={{ userProfile, fetchUserProfile, updateProfile, updateRole, isLoading }}>
+    <UserContext.Provider value={{ userProfile, fetchUserProfile, fetchAllUsers, users, updateProfile, updateRole, isLoading }}>
       {children}
     </UserContext.Provider>
   );

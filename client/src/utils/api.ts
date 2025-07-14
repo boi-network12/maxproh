@@ -76,3 +76,14 @@ export const updateUserRole = async (data: UpdateUserRole, token: string): Promi
     throw new Error(extractErrorMessage(error));
   }
 };
+
+export const getAllUsers = async (token: string, searchQuery: string = ""): Promise<User[]> => {
+  try {
+    const response = await api.get<User[]>(`/users/all?search=${encodeURIComponent(searchQuery)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error));
+  }
+};
