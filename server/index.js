@@ -21,6 +21,7 @@ connectDB();
 
 const allowedOrigins = [
   'http://localhost:3000',
+  'http://192.168.4.4:3000',
   'https://maxproh.pxxl.click', 
   'https://maxproh.vercel.app', 
 ];
